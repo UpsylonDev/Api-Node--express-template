@@ -15,7 +15,8 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 // Récupérer un membre.
 app.get('/api/v1/members/:id', (req, res) => {
-   res.json( success(members[(req.params.id)- 1].name) )
+    let choice = (req.params.id)-1
+     let test = res.json(  ( success(members[choice].name ).result)  )
 });
 
 // requete parametrée
