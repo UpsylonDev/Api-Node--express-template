@@ -2,7 +2,7 @@ require("babel-register");
 var morgan = require("morgan");
 const express = require("express");
 const members = require("./assets/Members")
-const {success , errors} = require("./assets/fonctions")
+const {success , errors,getIndex} = require("./assets/fonctions")
 const bodyParser = require("body-parser")
 
 const app = express();
@@ -15,10 +15,16 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 // Récupérer un membre.
 app.get('/api/v1/members/:id', (req, res) => {
-    let choice = (req.params.id)-1
-     let test = res.json(  ( success(members[choice].name ).result)  )
-});
+    // vérifier que l'ID est bien un nombre (sécurité)
+    // en passant par la fonction getIndex
+    let index = getIndex(req.params.id)
 
+    if (typeof(index) == 'string') {
+        res.json(errors(index))
+    } else {
+        res.json(success(members[index]) )
+    }
+});
 // requete parametrée
 app.get('/api/v1/members', (req, res) => {
     if (req.query.max != undefined && req.query.max > 0) {
