@@ -21,6 +21,11 @@ function getIndex(id) {
     return "Mauvaise ID"
     
 }
+function createId() {
+    // récupérer le dernier membre et ajouter un nouveau n°id 
+    return lastMember = members[members.length -1].id + 1
+    
+}
 
-module.exports = {success , errors, getIndex}
+module.exports = {success , errors, getIndex, createId}
 
