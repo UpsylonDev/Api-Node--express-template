@@ -1,7 +1,0 @@
-{
-    "base": "/api/v1",
-    "name": "/name/",
-    "surName": "/surname/",
-    "userEmail": "email",
-    "port" : 8080
-}
