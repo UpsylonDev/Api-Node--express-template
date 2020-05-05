@@ -13,17 +13,17 @@ const UserTestSchema = new mongoose.Schema({
     phone : {
         number : String,
         default : ""
-    }
+    },
+    messages: ['userMessages'] 
 });
 
-const UserMessSchema  = new mongoose.Schema({
-    messages : [ {
-        message : String
-    }],
-    points : Number
-  });
+const UserMessagesShema  = new mongoose.Schema({
+    message : String,
+
+});
 
 // regrouper le tout dans un model 'myUsers' est le nom de la collection
 const myUsers = mongoose.model('myUsers', UserTestSchema);
+const userMessages = mongoose.model('userMessages', UserMessagesShema);
 
-module.exports = { myUsers }
+module.exports = { myUsers, userMessages }
