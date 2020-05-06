@@ -1,11 +1,11 @@
-// MONGOOSE  DEFINITION MODELS
+// MONGOOSE MODELS IMBRIQUES
 var mongoose = require('mongoose');
 
 // rendre possible l'utilisation des schemas
 var Schema = mongoose.Schema
 var ObjectId = Schema.ObjectId;
 
-// definiton des shemas 
+// definiton des shemas !jamais de contenu que types!
 const UserTestSchema = new mongoose.Schema({
     name: String,
     surname : String,
@@ -13,12 +13,18 @@ const UserTestSchema = new mongoose.Schema({
     phone : {
         number : String,
         default : ""
-    },
-    messages: ['userMessages'] 
+
+    }, // accepter les messages qui viennent de la collection userMessages
+    messages: [{ 
+        type : Schema.Types.ObjectId, // ajoute l'id d'un message et non le message
+        ref : 'userMessages' // fait reference à la COLLECTION userMessages
+    }] 
 });
 
 const UserMessagesShema  = new mongoose.Schema({
     message : String,
+    title : String,
+    note : Number 
 
 });
 

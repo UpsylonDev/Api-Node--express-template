@@ -28,59 +28,91 @@ db.once('open', function () {
 // RECUPERATION DES MODELS
 const {myUsers, userMessages} = require('./MODELS/Users')
 
-app.get('/ajouter', (req, res) => {
-
-    // MONGOOSE- AJOUT DATAS
-    var newUser = new myUsers({
-        name: "Martin",
-        surname: "sloveg",
-        email: "mmm@gmail",
-        phone: {
-            number: "3456789"
-        }
-    });
-
-    // MONGOOSE VALIDATION CHANGES
-    newUser.save().then(() => {
-            console.log("Gangements OK !")
-
-        }).catch((err) => { console.log(err)})
+app.get('/mess', (req, res) => {
+    // MONGOOSE CREATION ET AJOUT rapide
+    var yann = myUsers({name: "yann"})
+    yann
+        .messages
+        .push({message: "blalbalbdsf sdfsdfsdf sdfsd fsd"})
+    yann
+        .save()
+        .catch((err) => console.log(err))
+        res.end()
 });
 
-app.get('/autre', (req, res) => {
 
-    // MONGOOSE CREATION COLLETION + DATAS
-    var newUser = new myUsers({
-        name: "pierrot",
-        message : " je suis pierot le fou"
-    });
+// app.get('/mess2', (req, res) => {
 
-    // MONGOSE VALIDATION
-    newUser.save().then(() => {
-            console.log("Okkkk posté !")
-            res.end()
+//     // MONGOOSE UPDATE + PUSH
+//     const newMessage = { messages : 'hello2'}
 
-    }).catch((err) => {
-        console.log(err);
-      });
-})
+//     myUsers.updateOne({ name : "yann"}, { $push: { messages: newMessage } })
+//           .then(()=>{
+//               console.log('Modifié !')
+//             //   ...
+//           }).catch(error => res.status(400).json({ error }));
 
+          
+          
 
-app.get('/mess', (req, res) => {
-    // MONGOOSE CREATION COLLETION + DATAS
-    var newMessages = new userMessages({
-      messages : "zeezrez",
+// });
+app.get('/mess3', (req, res) => {
+
+    // MONGOOSE Creation collection imbriquées 
+
+    /**
+     * 1 créer un message
+     * 2 le sauver 
+     * 3 faire un push de son id vers le parent qui l'embarque
+     *   afin de les lier
+    */
+
+    // 1 creation d'un document séparé
+    var Newmessage = new  userMessages({ 
+        message : "un messages complet ....",
+        title : "Montitre 1",
+        note : 5
+
     });
     
-    // MONGOOSE VALIDATION CHANGES
-    newMessages.save().then(() => {
-      console.log("Creation")
-      
-    }).catch((err) => { console.log(err)})
-  })
+    // 2 sauvegarde
+    Newmessage.save().then(()=>{ 
+        console.log('sauvé')
+        res.end()
+        
+    }).catch((err)=> console.log(err))
 
+    // 3 pousser la reference dans le parent souhaité 
+    myUsers.updateOne({ name : "yann"}, { $push: { messages: Newmessage } })
+    .then((resp)=>{
+        console.log('Modifié !')
+    }).catch(error => res.status(400).json({ error }));
+
+});
+
+app.get('/liretout', (req, res)=>{
+
+    
+    // MONGOOSE POPULATE vers simple : 
+    /**
+     *  populate( 'la props du parent à remplir, 
+     *  2eme arg la liste des props de l'enfant à integrer
+     */
+    myUsers.findOne({name : 'yann'}).populate('messages' , 'title message note')
+    .exec((err, response)=>{
+        // renvoyer la reponse au front
+        console.log(response)
+        res.json({
+            yannMessages : response.messages[4]
+        })
+
+    });
+
+    
+})
 
 //********************************************************* */
 app.listen(5000, () => {
     console.log("Lecture du port : 5000 >>>>>>>>>>>>>>>>>");
 });
+
