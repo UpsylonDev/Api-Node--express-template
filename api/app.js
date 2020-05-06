@@ -2,7 +2,10 @@ const express = require("express");
 var bodyParser = require("body-parser");
 var mongoose = require('mongoose');
 
+
+
 const app = express();
+
 
 // MIDLEWARES
 app.use(bodyParser.urlencoded({extended: false}));
@@ -123,6 +126,30 @@ app.get('/liretout', (req, res)=>{
 
     
 })
+
+app.get('/test', (req, res)=>{
+    console.log('ok')
+    res.cookie('name_of_cookie', 'value_of_cookie', { maxAge: 900000, httpOnly: true });
+    res.end()
+})
+
+// NODEJS COOKIES SET/GET
+// npm install express cookie-parser --save
+var cookieParser = require('cookie-parser');
+app.use(cookieParser());
+app.get('/set', function(req, res){
+    // setting cookies
+    res.cookie('username', 'john doe', { maxAge: 900000, httpOnly: true });
+    var username = req.cookies['username'];
+    if (username) {
+        console.log(username)
+        
+        return res.json({username});        
+    }else {
+        res.end()
+    }
+});
+
 
 //********************************************************* */
 app.listen(5000, () => {
