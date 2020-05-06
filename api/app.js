@@ -18,22 +18,25 @@ mongoose.connect(mongUIRI, {
     useUnifiedTopology: true
 });
 
-// VALIDATION
+// VALIDATION CONNEXION
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
     console.log('Connecté à ATLAS >>>>>>>>>>>>')
 });
 
-// RECUPERATION DES MODELS
+// RECUPERATION DES MODELS = collections structurées 
 const {myUsers, userMessages} = require('./MODELS/Users')
 
-app.get('/mess', (req, res) => {
+/**
+ * Creation et ajout de datas
+ */
+app.post('/mess', (req, res) => {
     // MONGOOSE CREATION ET AJOUT rapide
     var yann = myUsers({name: "yann"})
     yann
         .messages
-        .push({message: "blalbalbdsf sdfsdfsdf sdfsd fsd"})
+        .push({message: "blalbalbdsfd"})
     yann
         .save()
         .catch((err) => console.log(err))
@@ -41,22 +44,28 @@ app.get('/mess', (req, res) => {
 });
 
 
-// app.get('/mess2', (req, res) => {
 
-//     // MONGOOSE UPDATE + PUSH
-//     const newMessage = { messages : 'hello2'}
+/**
+ * Update  + push dans un arrray
+ */
+app.put('/mess2', (req, res) => {
 
-//     myUsers.updateOne({ name : "yann"}, { $push: { messages: newMessage } })
-//           .then(()=>{
-//               console.log('Modifié !')
-//             //   ...
-//           }).catch(error => res.status(400).json({ error }));
+    const newMessage = { messages : 'hello2'}
 
-          
-          
+    myUsers.updateOne({ name : "yann"}, { $push: { messages: newMessage } })
+          .then(()=>{
+              console.log('Modifié !')
+            //   ...
+          }).catch(error => res.status(400).json({ error }));
 
-// });
-app.get('/mess3', (req, res) => {
+});
+
+/**
+ * Ajout de datas imbliquées (clés étrangères)
+ * 
+ * 
+ */
+app.post('/mess3', (req, res) => {
 
     // MONGOOSE Creation collection imbriquées 
 
@@ -90,9 +99,13 @@ app.get('/mess3', (req, res) => {
 
 });
 
+/**
+ * Lecture de données imbiquées 
+ * dans plusieurs collections
+ *  et retour au front
+ * 
+ */
 app.get('/liretout', (req, res)=>{
-
-    
     // MONGOOSE POPULATE vers simple : 
     /**
      *  populate( 'la props du parent à remplir, 
