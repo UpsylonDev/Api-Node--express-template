@@ -1,3 +1,4 @@
+// #NODE - encryptage de donnnées
 const crypto  = require("crypto-js/sha256")
 
 function crypt(value){
