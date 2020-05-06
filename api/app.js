@@ -140,6 +140,10 @@ app.use(cookieParser());
 app.get('/set', function(req, res){
     // setting cookies
     res.cookie('username', 'john doe', { maxAge: 900000, httpOnly: true });
+    
+    // Supprimmer le cookie
+    res.cookie('username', 'john doe', { maxAge: -1, httpOnly: true });
+
     var username = req.cookies['username'];
     if (username) {
         console.log(username)
