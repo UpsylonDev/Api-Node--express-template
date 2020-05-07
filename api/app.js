@@ -11,6 +11,13 @@ const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 // app.use(bodyParser.json)
 app.use(express.static("/public"));
+const js = require('./test.json')
+console.log(js)
+
+
+app.get('/json', (req, res)=>{
+    res.json(js )
+})  
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 // INSTALLATION MONGOOSE
